@@ -1,0 +1,83 @@
+name: yocto build qemuarm64
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: build yocto main
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: cleanup ubuntu server
+      env:
+          DEBIAN_FRONTEND: noninteractive
+      run: |
+          sudo sed -i "s/\# deb-src/deb-src/g" /etc/apt/sources.list
+          df -h
+          echo "Removing docker images"
+          docker rmi `docker images -q`
+          df -h
+          echo "Removing large directories"
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          echo "Listing 100 largest packages"
+          dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 100
+          df -h
+          echo "Removing large packages"
+          sudo apt-get remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox powershell mono-devel
+          sudo -E apt-get -y purge ghc* zulu* llvm* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* moby* snapd* || true
+          sudo -E apt-get -y autoremove --purge
+          sudo -E apt-get clean
+          df -h
+          sudo -E apt-get update
+          sudo -E apt-get build-dep -y linux
+          sudo -E apt-get install -y crossbuild-essential-arm64 wget
+          sudo -E apt-get install binutils-dev
+          sudo -E apt-get install libreadline-dev
+          sudo -E apt-get install libelf-dev
+          sudo wget https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz
+          sudo tar -xf gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz -C /opt/
+          ls -lahtr /opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin
+          export PATH=/opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH
+          echo "Print env"
+          env
+          df -h
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+          ref: main
+          submodules: 'true'
+          token: ${{ secrets.PAT_TOKEN }}
+
+    - name: bitbake core-image-minimal
+      run: |
+          source poky/oe-init-build-env
+          bitbake core-image-minimal
+          du -d 1 -h
+          tree -L 3
+
+    - name: prepare artifact
+      run: |
+          mkdir -p ./release
+
+          #    - name: deliver firmware
+          #      uses: actions/upload-artifact@v3
+          #      with:
+          #          name: qemuarm64_firmware
+          #          path: ./artifact/
+
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "::set-output name=release_tag::qemuarm64_$(date +"%Y.%m.%d_%H-%M")"
+
+    - name: release with notes
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        files: ./release

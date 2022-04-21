@@ -1,0 +1,6 @@
+[submodule "poky"]
+	path = poky
+	url = git@github.com:0lxb/poky.git
+[submodule "meta-arm"]
+	path = meta-arm
+	url = git@github.com:0lxb/meta-arm.git
