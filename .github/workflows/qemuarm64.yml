@@ -52,7 +52,6 @@ jobs:
       with:
           ref: main
           submodules: 'true'
-          token: ${{ secrets.PAT_TOKEN }}
 
     - name: bitbake core-image-minimal
       run: |
