@@ -41,10 +41,10 @@ jobs:
           sudo -E apt-get install -y libreadline-dev
           sudo -E apt-get install -y libelf-dev
           sudo -E apt-get install -y gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 xterm
-          sudo wget https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz
-          sudo tar -xf gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz -C /opt/
-          ls -lahtr /opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin
-          export PATH=/opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH
+          sudo wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu.tar.xz
+          sudo tar -xf gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu.tar.xz -C /opt/
+          ls -lahtr /opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin
+          export PATH=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin:$PATH
           echo "Print env"
           env
           df -h
