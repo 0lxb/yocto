@@ -57,13 +57,14 @@ jobs:
     - name: bitbake core-image-minimal
       run: |
           source poky/oe-init-build-env
-          bitbake core-image-minimal
+          #bitbake core-image-minimal
+          bitbake buildtools-tarball
           du -d 1 -h
-          tree -L 3
 
     - name: prepare artifact
       run: |
           mkdir -p ./release
+          cp -rf tmp/deploy release
 
           #    - name: deliver firmware
           #      uses: actions/upload-artifact@v3
