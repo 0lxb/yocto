@@ -65,7 +65,9 @@ jobs:
     - name: prepare artifact
       run: |
           mkdir -p ./release
-          cp -rf tmp/deploy release
+          ls -lahtr
+          pwd
+          cp -rf ./tmp/deploy release
 
           #    - name: deliver firmware
           #      uses: actions/upload-artifact@v3
