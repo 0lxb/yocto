@@ -67,7 +67,7 @@ jobs:
           mkdir -p ./release
           ls -lahtr
           pwd
-          cp -rf ./tmp/deploy release
+          cp -rf ./build/tmp/deploy ./release
 
           #    - name: deliver firmware
           #      uses: actions/upload-artifact@v3
