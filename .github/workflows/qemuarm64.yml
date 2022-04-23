@@ -60,6 +60,7 @@ jobs:
           #bitbake core-image-minimal
           bitbake buildtools-tarball
           du -d 1 -h
+          tree -L 3
 
     - name: prepare artifact
       run: |
