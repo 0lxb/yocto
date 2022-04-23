@@ -60,14 +60,15 @@ jobs:
           #bitbake core-image-minimal
           bitbake buildtools-tarball
           du -d 1 -h
-          tree -L 3
+          tree -L 4
 
     - name: prepare artifact
       run: |
           mkdir -p ./release
           ls -lahtr
           pwd
-          cp -rf ./build/tmp/deploy ./release
+          tar -cvzf deploy.tgz ./build/tmp/deploy
+          cp -rf deploy.tgz ./release
 
           #    - name: deliver firmware
           #      uses: actions/upload-artifact@v3
