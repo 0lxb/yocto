@@ -59,8 +59,6 @@ jobs:
           source poky/oe-init-build-env
           #bitbake core-image-minimal
           bitbake buildtools-tarball
-          du -d 1 -h
-          tree -L 4
 
     - name: prepare artifact
       run: |
@@ -68,7 +66,7 @@ jobs:
           ls -lahtr
           pwd
           tar -czf deploy.tgz ./build/tmp/deploy
-          cp -rf deploy.tgz ./release
+          mv deploy.tgz ./release
           ls -lahtr ./release
 
           #    - name: deliver firmware
@@ -86,4 +84,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        files: ./release
+        files: ./release/deploy.tgz
